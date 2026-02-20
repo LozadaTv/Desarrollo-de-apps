@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>Tarea</p>
+    <input type="text" id="tarea" placeholder="" required>   <!-- id="" sirve para poder encontrar mas facil los datos, este se llamara "tarea"-->
+    <!-- <button onclick="agregar()">Agregar</button> -->
+    <br>
+
+    <button type="button" onclick="agregar()">agregar</button>
+
+    <h1>lista </h1>
+    <ul id="lista"></ul>
+
+    <script>
+        function agregar(){
+            const tarea = document.getElementById('tarea').value;
+            document.getElementById('lista').innerHTML += '<li>' + tarea + '</li>';
+            document.getElementById('tarea').value = '';
+        }
+    </script>
+<!--Append, seccion hija en un elemento como tal, mientras que el inner html lo que hace es concatenar, lo hace en pensar en la estructura-->
+</body>
+</html>

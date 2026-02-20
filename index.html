@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Calculadora</h1>
+    <form id="form_suma">
+        <label>Numero 1</label>
+        <!-- <input type="number"> -->
+        <input id="num1" type="text" placeholder="numero 1" required>
+        <br>
+        <label>Numero 2</label>
+        <input id="num2" type="text" placeholder="numero 2" required>
+        <br>
+        <button type="button" onClick="sumar()">sumar</button>
+    </form>
+        <p>resultado <span id="resultado"> </span> </p>
+    <script> //Implementar Script para que funcione
+
+        function sumar(){   //al momento de presionar el botón se ejecute la acción sumar
+
+        const n1 = Number (document.getElementById("num1").value);
+        const n2 = Number (document.getElementById("num2").value);
+
+        const suma = n1 + n2;
+        
+        document.getElementById("resultado").textContent = suma;
+
+        }
+    </script>
+
+
+    <br>    <!-- Segundo ejercicio -->
+    <h1>Lista de Tareas</h1>
+    <form id="to_do">
+        <label for="tarea">Tarea</label>
+        <input id="tarea" type="text" placeholder="tarea a realizar" required>
+        <button type="button" onClick="agregar()">Agregar</button> <!-- Botón "Agregar"-->
+        
+    </form>
+    <ul id="lista_tareas">  <!-- lista de tareas, cada tarea se agregará como un elemento li dentro de esta lista ul -->
+
+        <!-- <li>tarea 1</li>
+        <li>tarea 2</li>
+        <li>tarea 3</li> -->
+    </ul>
+    <script> // implementar script para que funcione
+
+        function agregar(){ // al momento de presionar el botón "Agregar" se ejecuta la acción o la función
+
+            const tarea = document.getElementById("tarea").value; //captura el valor del input
+            const li = document.createElement("li"); //crea un elemento li
+            li.textContent = tarea; //asigna el valor del input al texto del li
+            document.getElementById("lista_tareas").appendChild(li); //agrega el li a la lista de tareas
+        }
+    </script>
+
+
+</body>
+</html>
