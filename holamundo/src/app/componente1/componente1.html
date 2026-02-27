@@ -3,3 +3,15 @@
 {{ nombre }}
 
 <button (click)="cambiarNombre()">Cambiar Nombre</button>
+<br />
+
+<h3>{{ textoApi }}</h3>
+
+<label>Tarea</label>
+<input type="text" [(ngModel)]="tarea" placeholder="" />
+<button type="button" (click)="agregar()">agregar</button>
+<h1>Lista</h1>
+
+<ul id="lista">
+  <li *ngFor="let item of lista">{{ item }}</li>
+</ul>
