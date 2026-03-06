@@ -1,0 +1,28 @@
+@if (movie) {
+  <div class="descripcion-container">
+    <button class="back-btn" (click)="goBack()">← Volver</button>
+    
+    <div class="movie-detail">
+      <div class="movie-image">
+        <img [src]="movie.image" [alt]="movie.title" />
+      </div>
+      
+      <div class="movie-info">
+        <h1>{{ movie.title }}</h1>
+        
+        <div class="category-badge">
+          {{ movie.category }}
+        </div>
+        
+        <p class="description" [innerHTML]="movie.description"></p>
+        
+        <button class="ver-btn" (click)="addToHistorial()">Ver</button>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="error-container">
+    <p>Película no encontrada.</p>
+  </div>
+}
+

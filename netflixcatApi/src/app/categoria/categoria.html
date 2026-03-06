@@ -1,0 +1,17 @@
+<div class="categoria-container">
+  @for (category of categories; track category) {
+    <div class="category-section">
+      <h2>{{ category }}</h2>
+      <div class="movies-grid">
+        @for (movie of moviesByCategory[category]; track movie.id) {
+          <div class="movie-card">
+            <img [src]="movie.image" [alt]="movie.title" />
+            <h3>{{ movie.title }}</h3>
+            <button class="ver-btn" (click)="viewMovie(movie.id)">Ver</button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+

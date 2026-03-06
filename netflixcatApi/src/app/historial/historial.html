@@ -1,0 +1,30 @@
+<div class="historial-container">
+  <h1>Mis películas</h1>
+  
+  @if (historial().length > 0) {
+    <div class="historial-actions">
+      <button class="back-btn" (click)="goBack()">← Volver</button>
+      <button class="clear-btn" (click)="clearAll()">Limpiar historial</button>
+    </div>
+
+    <div class="historial-grid">
+      @for (movie of historial(); track movie.id) {
+        <div class="historial-card">
+          <img [src]="movie.image" [alt]="movie.title" />
+          <div class="card-content">
+            <h3>{{ movie.title }}</h3>
+            <p class="category">{{ movie.category }}</p>
+            <p class="description" [innerHTML]="movie.description"></p>
+            <button class="remove-btn" (click)="removeFromHistorial(movie.id)">Eliminar</button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p>No hay películas en tu historial aún.</p>
+      <button class="back-btn" (click)="goBack()">← Ir al catálogo</button>
+    </div>
+  }
+</div>
+
