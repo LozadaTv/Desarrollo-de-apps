@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map, switchMap } from 'rxjs';
+import { Observable, forkJoin, of, map, switchMap, catchError } from 'rxjs';
 
 export interface Pokemon {
   name: string;
@@ -28,7 +28,6 @@ export interface PokemonDetail {
 })
 export class ApiService {
   private apiUrl = 'https://pokeapi.co/api/v2/pokemon';
-  private speciesUrl = 'https://pokeapi.co/api/v2/pokemon-species';
 
   constructor(private http: HttpClient) {}
 
@@ -37,23 +36,53 @@ export class ApiService {
   }
 
   getPokemonDetails(name: string): Observable<PokemonDetail> {
+    console.log('Obteniendo detalles de:', name);
     return this.http.get<any>(`${this.apiUrl}/${name}`).pipe(
-      map(pokemon => ({
-        id: pokemon.id,
-        name: pokemon.name,
-        image: pokemon.sprites.front_default || 'https://via.placeholder.com/200?text=No+Image',
-        height: pokemon.height,
-        weight: pokemon.weight,
-        description: `Alto: ${pokemon.height / 10}m | Peso: ${pokemon.weight / 10}kg`
-      }))
+      map(pokemon => {
+        // Usar URL oficial de render.io que es más confiable que githubusercontent
+        const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
+        
+        const detail = {
+          id: pokemon.id,
+          name: pokemon.name,
+          image: imageUrl,
+          height: pokemon.height,
+          weight: pokemon.weight,
+          description: `Alto: ${(pokemon.height / 10).toFixed(1)}m | Peso: ${(pokemon.weight / 10).toFixed(1)}kg`
+        };
+        console.log('Detalle cargado:', detail.name, '- Imagen:', detail.image);
+        return detail;
+      }),
+      catchError(error => {
+        console.error(`❌ Error cargando ${name}:`, error);
+        return of({
+          id: 0,
+          name: name,
+          image: 'https://via.placeholder.com/200?text=Error',
+          height: 0,
+          weight: 0,
+          description: 'Error al cargar'
+        });
+      })
     );
   }
 
   getPokemonList(limit: number = 20, offset: number = 0): Observable<PokemonDetail[]> {
+    console.log('Iniciando getPokemonList');
     return this.getPokemon(limit, offset).pipe(
-      map(response => response.results),
-      map(pokemonList => pokemonList.map(p => this.getPokemonDetails(p.name))),
-      switchMap(requests => forkJoin(requests))
+      switchMap(response => {
+        console.log('Pokémon recibidos:', response.results.length);
+        const detailRequests = response.results.map(pokemon => 
+          this.getPokemonDetails(pokemon.name)
+        );
+        console.log('Ejecutando', detailRequests.length, 'peticiones en paralelo...');
+        return forkJoin(detailRequests);
+      }),
+      map(details => details.sort((a, b) => a.id - b.id)),
+      catchError(error => {
+        console.error('❌ Error en getPokemonList:', error);
+        return of([]);
+      })
     );
   }
 }

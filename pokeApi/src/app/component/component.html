@@ -17,7 +17,14 @@
   <div *ngIf="!loading && pokemonList.length > 0" class="pokemon-grid">
     <div *ngFor="let pokemon of pokemonList" class="pokemon-card">
       <div class="image-container">
-        <img [src]="pokemon.image" [alt]="pokemon.name" class="pokemon-image" />
+        <img 
+          [src]="pokemon.image" 
+          [alt]="pokemon.name" 
+          class="pokemon-image"
+          onerror="this.src='https://via.placeholder.com/200?text=No+Image'"
+          loading="lazy"
+          crossorigin="anonymous"
+        />
       </div>
       <h3>{{ pokemon.name | titlecase }}</h3>
       <p class="description">{{ pokemon.description }}</p>
