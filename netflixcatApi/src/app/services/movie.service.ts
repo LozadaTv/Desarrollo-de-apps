@@ -12,6 +12,7 @@ export interface Movie {
   providedIn: 'root'
 })
 export class MovieService {
+  private readonly STORAGE_KEY = 'netflix-historial';
   private historialSignal = signal<Movie[]>([]);
   
   historial = this.historialSignal.asReadonly();
@@ -108,7 +109,29 @@ export class MovieService {
     }
   ];
 
-  constructor() {}
+  constructor() {
+    this.loadHistorialFromStorage();
+  }
+
+  private loadHistorialFromStorage(): void {
+    try {
+      const stored = localStorage.getItem(this.STORAGE_KEY);
+      if (stored) {
+        const historialData = JSON.parse(stored);
+        this.historialSignal.set(historialData);
+      }
+    } catch (error) {
+      console.error('Error al cargar historial desde localStorage:', error);
+    }
+  }
+
+  private saveHistorialToStorage(): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.historialSignal()));
+    } catch (error) {
+      console.error('Error al guardar historial en localStorage:', error);
+    }
+  }
 
   getMovies(): Movie[] {
     return this.movies;
@@ -126,15 +149,18 @@ export class MovieService {
     const historialArray = this.historialSignal();
     if (!historialArray.find(m => m.id === movie.id)) {
       this.historialSignal.set([...historialArray, movie]);
+      this.saveHistorialToStorage();
     }
   }
 
   removeFromHistorial(id: number): void {
     const historialArray = this.historialSignal();
     this.historialSignal.set(historialArray.filter(m => m.id !== id));
+    this.saveHistorialToStorage();
   }
 
   clearHistorial(): void {
     this.historialSignal.set([]);
+    this.saveHistorialToStorage();
   }
 }
